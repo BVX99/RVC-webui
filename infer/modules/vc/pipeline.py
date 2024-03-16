@@ -118,6 +118,14 @@ class Pipeline(object):
             f0 = cache_harvest_f0(input_audio_path, self.sr, f0_max, f0_min, 10)
             if filter_radius > 2:
                 f0 = signal.medfilt(f0, 3)
+                )
+        elif f0_method == "Fareis":
+            input_audio_path2wav[input_audio_path] = x.astype(np.double)
+            fareis_predictor = FareisF0Predictor(hop_length=hop_length, f0_min=f0_min, f0_max=f0_max, sampling_rate=self.sr)
+            f0 = fareis_predictor.compute_f0(input_audio_path2wav[input_audio_path])
+            if filter_radius > 2:
+                f0 = signal.medfilt(f0, 3)
+                )
         elif f0_method == "crepe":
             model = "full"
             # Pick a batch size that doesn't cause memory errors on your gpu
